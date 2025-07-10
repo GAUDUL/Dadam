@@ -6,41 +6,76 @@ import {
   Text,
   View,
   TouchableOpacity,
+  Alert,
+  TextInput,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { AuthStackParamList } from '../../../navigation/types';
+import { useAppNavigation } from '../../../navigation/useAppNavigation';
+import { testFetch } from '../../../fetch/testFetch';
+import { useLoginForm } from '../hooks/useLoginForm';
+import { useLogin } from '../hooks/useLogin';
 
 function LoginScreen() {
-  const navigation = useNavigation<NativeStackNavigationProp<AuthStackParamList>>();
+  const navigation = useAppNavigation();
+  const [check, setCheck] = useState('실패');
+  const { user, handleChange, handleIdChange } = useLoginForm();
+  const { login, loading } = useLogin();
+
+    useEffect(() => {
+    const fetchData = async()=>{
+      const res=await testFetch();
+      setCheck(res);
+    }
+
+    fetchData();
+  }, []);
 
   const handleSignupNavigation = () => {
-    console.log('회원가입');
     navigation.navigate('Signup');
   };
 
-  useEffect(() => {
-
-  }, []);
-
+  const handleLogin = async () => {
+    try {
+      await login(user);
+      Alert.alert('로그인 성공');
+    } catch (e) {
+      Alert.alert('로그인 실패');
+    }
+  };
 
   return (
     <SafeAreaView>
       <ScrollView>
         <View>
           <Text>Login Screen</Text>
+          <Text>서버 연결 {check}</Text>
+
+          <TextInput
+              placeholder="아이디"
+              placeholderTextColor="#888"
+              value={user.id}
+              onChangeText={handleIdChange}
+              maxLength={16}
+              keyboardType="default"
+          />
+          
+          <TextInput
+              placeholder="비밀번호"
+              placeholderTextColor="#888"
+              value={user.password}
+              secureTextEntry
+              onChangeText={text => handleChange('password', text)}
+              maxLength={20}
+          />
+          
+          <TouchableOpacity
+            onPress={handleLogin}
+            style={styles.button}>
+            <Text>로그인</Text>
+          </TouchableOpacity>
+
           <TouchableOpacity
             onPress={handleSignupNavigation}
-            style={{
-            width: 100, 
-            height: 50, 
-            justifyContent: 'center',
-            alignItems: 'center',
-            borderRadius: 5,
-            borderColor: 'black',
-            borderWidth: 1,
-            }}
-            >
+            style={styles.button}>
             <Text>회원가입</Text>
           </TouchableOpacity>
         </View>
@@ -50,21 +85,14 @@ function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
+  button: {
+    width: 100,
+    height: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+    borderColor: 'black',
+    borderWidth: 1,
   },
 });
 
