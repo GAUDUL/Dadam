@@ -17,7 +17,7 @@ function SignupScreen() {
   const navigation = useAppNavigation();
 
   const languageOptions = [
-  { label: '베트남어', value: 'ja' },
+  { label: '베트남어', value: 'vi' },
   { label: '영어', value: 'en' },
   { label: '중국어', value: 'zh' },
   ];
@@ -26,6 +26,7 @@ function SignupScreen() {
   const { signup, loading } = useSignup();
 
   const handleSubmit = async () => {
+    console.log('signup data:', user);
     try {
       await signup(user);
       Alert.alert('회원가입 성공');
@@ -44,7 +45,7 @@ function SignupScreen() {
           <TextInput
                 placeholder="아이디"
                 placeholderTextColor="#888"
-                value={user.id}
+                value={user.userId}
                 onChangeText={handleIdChange}
                 maxLength={16}
                 keyboardType="default"
@@ -62,16 +63,16 @@ function SignupScreen() {
           <TextInput
                 placeholder="이름"
                 placeholderTextColor="#888"
-                value={user.id}
-                onChangeText={text=> handleChange('userName', text)}
+                value={user.username}
+                onChangeText={text=> handleChange('username', text)}
                 keyboardType="default"
           />
 
           <TextInput
                 placeholder="이메일"
                 placeholderTextColor="#888"
-                value={user.id}
-                onChangeText={text=> handleChange('userEmail', text)}
+                value={user.email}
+                onChangeText={text=> handleChange('email', text)}
                 keyboardType="default"
           />
 

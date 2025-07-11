@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 export function useLoginForm() {
   const [user, setUser] = useState({
-    id: '',
+    userId: '',
     password: ''
   });
 
@@ -12,7 +12,7 @@ export function useLoginForm() {
 
   const handleIdChange = (text: string) => {
     const filtered = text.replace(/[^a-zA-Z0-9]/g, '');
-    handleChange('id', filtered);
+    handleChange('userId', filtered);
   };
 
   return {

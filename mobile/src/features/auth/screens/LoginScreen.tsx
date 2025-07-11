@@ -52,7 +52,7 @@ function LoginScreen() {
           <TextInput
               placeholder="아이디"
               placeholderTextColor="#888"
-              value={user.id}
+              value={user.userId}
               onChangeText={handleIdChange}
               maxLength={16}
               keyboardType="default"

@@ -2,10 +2,10 @@ import { useState } from 'react';
 
 export function useSignupForm() {
   const [user, setUser] = useState({
-    id: '',
+    userId: '',
     password: '',
-    userName: '',
-    userEmail: '',
+    username: '',
+    email: '',
     nativeLanguage: '',
   });
 
@@ -15,7 +15,7 @@ export function useSignupForm() {
 
   const handleIdChange = (text: string) => {
     const filtered = text.replace(/[^a-zA-Z0-9]/g, '');
-    handleChange('id', filtered);
+    handleChange('userId', filtered);
   };
 
   return {

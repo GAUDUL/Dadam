@@ -2,7 +2,7 @@ import api from '../../../shared/api';
 import { SignupRequest, LoginRequest } from '../types';
 
 export async function signupApi(data: SignupRequest) {
-  const response = await api.post('/signup', data);
+  const response = await api.post('/auth/sign-up', data);
   return response.data;
 }
 

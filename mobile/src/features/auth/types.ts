@@ -1,12 +1,12 @@
 export interface SignupRequest {
-  id: string;
+  userId: string;
   password: string;
-  userName: string;
-  userEmail: string;
+  username: string;
+  email: string;
   nativeLanguage: string;
 }
 
 export interface LoginRequest {
-  id: string;
+  userId: string;
   password: string;
 }
