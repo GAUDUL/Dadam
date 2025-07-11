@@ -26,7 +26,6 @@ function SignupScreen() {
   const { signup, loading } = useSignup();
 
   const handleSubmit = async () => {
-    console.log('signup data:', user);
     try {
       await signup(user);
       Alert.alert('회원가입 성공');

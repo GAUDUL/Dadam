@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { loginApi } from '../api/authApi';
 import type { LoginRequest } from '../types';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export function useLogin() {
   const [loading, setLoading] = useState(false);
@@ -11,6 +12,8 @@ export function useLogin() {
     setError(null);
     try {
       const res = await loginApi(data);
+      const token = res.token;
+      await AsyncStorage.setItem('accesToken', token);
       return res;
     } catch (e: any) {
       setError(e.response?.data?.message || '로그인 실패');

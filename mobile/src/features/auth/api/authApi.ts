@@ -7,6 +7,6 @@ export async function signupApi(data: SignupRequest) {
 }
 
 export async function loginApi(data: LoginRequest){
-    const response = await api.post('/login', data);
+    const response = await api.post('/auth/sign-in', data);
     return response.data;
 }

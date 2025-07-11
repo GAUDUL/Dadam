@@ -6,7 +6,7 @@ const Stack = createNativeStackNavigator();
 
 export default function MainStack() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName="MainPage">
       <Stack.Screen name="MainPage" component={MainPage} />
     </Stack.Navigator>
   );
