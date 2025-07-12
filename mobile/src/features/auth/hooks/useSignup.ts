@@ -11,6 +11,7 @@ export function useSignup() {
     setError(null);
     try {
       const res = await signupApi(data);
+      
       return res;
     } catch (e: any) {
       setError(e.response?.data?.message || '회원가입 실패');

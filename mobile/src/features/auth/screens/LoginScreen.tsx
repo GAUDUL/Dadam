@@ -18,7 +18,7 @@ function LoginScreen() {
   const navigation = useAppNavigation();
   const [check, setCheck] = useState('실패');
   const { user, handleChange, handleIdChange } = useLoginForm();
-  const { login, loading } = useLogin();
+  const { login } = useLogin();
 
     useEffect(() => {
     const fetchData = async()=>{
