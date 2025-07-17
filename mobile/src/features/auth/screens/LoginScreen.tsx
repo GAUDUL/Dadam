@@ -9,13 +9,13 @@ import {
   Alert,
   TextInput,
 } from 'react-native';
-import { useAppNavigation } from '../../../navigation/useAppNavigation';
+import { useAuthNavigation } from '../../../navigation/useAppNavigation';
 import { testFetch } from '../../../fetch/testFetch';
 import { useLoginForm } from '../hooks/useLoginForm';
 import { useLogin } from '../hooks/useLogin';
 
 function LoginScreen() {
-  const navigation = useAppNavigation();
+  const navigation = useAuthNavigation();
   const [check, setCheck] = useState('실패');
   const { user, handleChange, handleIdChange } = useLoginForm();
   const { login } = useLogin();

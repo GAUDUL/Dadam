@@ -1,7 +1,7 @@
 import {useEffect, useState} from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import AuthStack from './AuthStack';
-import MainStack from './MainStack';
+import DashBoardStack from './DashBoardStack';
 import SplashScreen from '../shared/SplashScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { RootState } from '../shared/store';
@@ -28,7 +28,7 @@ const AppNavigator = () => {
 
   if (loading) return <SplashScreen />;
 
-  return isLoggedIn ? <MainStack /> : <AuthStack />;
+  return isLoggedIn ? <DashBoardStack /> : <AuthStack />;
 };
 
 export default AppNavigator

@@ -8,13 +8,13 @@ import {
   Alert,
   TouchableOpacity,
 } from 'react-native';
-import { useAppNavigation } from '../../../navigation/useAppNavigation';
+import { useAuthNavigation } from '../../../navigation/useAppNavigation';
 import { useSignupForm } from '../hooks/useSignupForm';
 import { useSignup } from '../hooks/useSignup';
 import RNPickerSelect from 'react-native-picker-select';
 
 function SignupScreen() {
-  const navigation = useAppNavigation();
+  const navigation = useAuthNavigation();
 
   const languageOptions = [
   { label: '베트남어', value: 'vi' },
