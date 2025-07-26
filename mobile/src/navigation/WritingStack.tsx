@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import WritingHome from '../features/writing/screens/writingHome';
+import WritingHome from '../features/writing/screens/WritingHome';
 const Stack = createNativeStackNavigator();
 
 export default function WritingStack() {

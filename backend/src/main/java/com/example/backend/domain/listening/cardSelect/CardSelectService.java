@@ -16,7 +16,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class CardSelectService {
 
     private final WordRepository wordRepository;
-    //일단은 메모리 기반 캐싱 이용
+    //일단은 메모리 기반 캐싱 이용 (테스트)
     private final Map<String, CardProblemSet> cache = new ConcurrentHashMap<>();
 
     //5개의 카드 고르기 문제 생성
