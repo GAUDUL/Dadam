@@ -17,6 +17,7 @@ export type ListeningStackParamList = {
   ListeningHome: undefined;
   ListeningStep1: undefined;
   ListeningStep2: undefined;
+  Test: undefined;
 }
 
 export type SpeakingStackParamList = {
