@@ -3,6 +3,7 @@ package com.example.backend.domain.listening.cardSelect;
 import com.example.backend.domain.listening.cardSelect.dto.Card;
 import com.example.backend.domain.listening.cardSelect.dto.CardProblem;
 import com.example.backend.domain.listening.cardSelect.dto.CardProblemSet;
+import com.example.backend.domain.listening.cardSelect.dto.CardSelectRequest;
 import com.example.backend.domain.listening.word.Word;
 import com.example.backend.domain.listening.word.WordRepository;
 import lombok.RequiredArgsConstructor;
@@ -73,4 +74,21 @@ public class CardSelectService {
         return problemSet.getProblems().get(problemIndex);
     }
 
+    //정답 확인
+    public boolean checkAnswer(CardSelectRequest cardSelect){
+        CardProblemSet problemSet = cache.get(cardSelect.getProblemSetId());
+        if(problemSet == null) throw new RuntimeException("해당 id의 문제를 찾을 수 없습니다");
+
+        List<CardProblem> problems = problemSet.getProblems();
+        int index = cardSelect.getProblemIndex();
+
+        if (index < 0 || index >= problems.size()) throw new IllegalArgumentException("유효하지 않은 문제 인덱스입니다");
+        //현재 문제 가져오기
+        CardProblem problem = problems.get(index);
+
+        int answerIndex = problem.getAnswerIndex();
+        int userSelected = cardSelect.getSelectedCardIndex();
+
+        return answerIndex == userSelected;
+    }
 }

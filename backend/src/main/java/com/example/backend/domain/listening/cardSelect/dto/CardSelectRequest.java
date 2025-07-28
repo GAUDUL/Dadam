@@ -7,6 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CardSelectRequest {
+    private String problemSetId;
     private int problemIndex;
-    private int selectedWordId;
+    private int selectedCardIndex;
 }

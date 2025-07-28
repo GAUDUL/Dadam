@@ -13,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CardProblemSet {
-    private String problemId;
+    private String problemSetId;
     private List<CardProblem> problems;
 
 }

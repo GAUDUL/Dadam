@@ -7,7 +7,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(name="word")
+@Table(name="words")
 public class Word {
 
     @Id
