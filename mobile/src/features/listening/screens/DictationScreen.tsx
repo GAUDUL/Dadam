@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity } from 'react-native';
 import { useListeningNavigation } from '../../../navigation/useAppNavigation';
 
-export default function ListeningStep2() {
+export default function DictationScreen() {
     const navigation = useListeningNavigation();
   return (
     <View>

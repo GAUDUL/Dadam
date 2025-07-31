@@ -64,14 +64,14 @@ public class CardSelectService {
     }
 
     //id와 index를 바탕으로 적절한 문제 반환
-    public CardProblem getProblem(String problemSetId, int problemIndex) {
+    public List<Card> getProblem(String problemSetId, int problemIndex) {
         CardProblemSet problemSet = cache.get(problemSetId);
         if( problemSet == null) throw new RuntimeException("해당 id의 문제를 찾을 수 없습니다");
 
         List<CardProblem> problems = problemSet.getProblems();
         if(problemIndex<0 || problemIndex >= problems.size()) throw new IllegalArgumentException("유효하지 않은 인덱스입니다.");
 
-        return problemSet.getProblems().get(problemIndex);
+        return problemSet.getProblems().get(problemIndex).getCards();
     }
 
     //정답 확인

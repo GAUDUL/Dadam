@@ -7,12 +7,12 @@ export default function ListeningHome() {
     <View>
         <Text>듣기 영역</Text>
         <TouchableOpacity
-        onPress={()=>navigation.navigate('ListeningStep1')}>
-            <Text>1단계</Text>
+        onPress={()=>navigation.navigate('CardSelect')}>
+            <Text>카드 고르기</Text>
         </TouchableOpacity>
         <TouchableOpacity
-        onPress={()=>navigation.navigate('ListeningStep2')}>
-            <Text>2단계</Text>
+        onPress={()=>navigation.navigate('Dictation')}>
+            <Text>받아쓰기</Text>
         </TouchableOpacity>
     </View>
   );

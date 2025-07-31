@@ -1,13 +1,17 @@
 package com.example.backend.domain.listening.cardSelect;
 
+import com.example.backend.domain.listening.cardSelect.dto.Card;
 import com.example.backend.domain.listening.cardSelect.dto.CardProblem;
 import com.example.backend.domain.listening.cardSelect.dto.CardSelectRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 
+@Slf4j
 @Controller
 @RequestMapping("/listening/card")
 @RequiredArgsConstructor
@@ -17,16 +21,19 @@ public class CardSelectController {
 
     @GetMapping("/start")
     public ResponseEntity<String> cardSelectStart() {
+
+        log.info("호출은 됨");
         String problemId = cardSelectService.createProblemSet();
+        log.info("만들었음");
         return ResponseEntity.ok().body(problemId);
     }
 
     @GetMapping("/problem")
-    public ResponseEntity<CardProblem> cardSelectProblem(
+    public ResponseEntity<List<Card>> cardSelectProblem(
             @RequestParam String problemSetId,
             @RequestParam int problemIndex
     ) {
-        CardProblem problem = cardSelectService.getProblem(problemSetId, problemIndex);
+        List<Card> problem = cardSelectService.getProblem(problemSetId, problemIndex);
         return ResponseEntity.ok().body(problem);
     }
 
