@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { checkAnswer, getProblem, getProblemSetId } from "../api/listeningApi";
+import { checkAnswer, getProblem, getProblemSetId, getWordTts } from "../api/listeningApi";
 import { CardProblem, CardSelectRequest } from "../types";
 
 export function useCardProb(){
@@ -27,7 +27,7 @@ export function useCardProb(){
             const res = await getProblem(data);
             return res;
         } catch (e:any){
-            setError(e.response?.data?.message || '문제 불러오기 실패')
+            setError(e.response?.data?.message || '문제 불러오기 실패');
             throw e;
         } finally{
             setLoading(false);

@@ -21,19 +21,16 @@ public class CardSelectController {
 
     @GetMapping("/start")
     public ResponseEntity<String> cardSelectStart() {
-
-        log.info("호출은 됨");
         String problemId = cardSelectService.createProblemSet();
-        log.info("만들었음");
         return ResponseEntity.ok().body(problemId);
     }
 
     @GetMapping("/problem")
-    public ResponseEntity<List<Card>> cardSelectProblem(
+    public ResponseEntity<CardProblem> cardSelectProblem(
             @RequestParam String problemSetId,
             @RequestParam int problemIndex
     ) {
-        List<Card> problem = cardSelectService.getProblem(problemSetId, problemIndex);
+        CardProblem problem = cardSelectService.getProblem(problemSetId, problemIndex);
         return ResponseEntity.ok().body(problem);
     }
 

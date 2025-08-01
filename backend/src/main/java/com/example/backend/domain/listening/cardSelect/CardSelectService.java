@@ -18,6 +18,7 @@ public class CardSelectService {
 
     private final WordRepository wordRepository;
     //일단은 메모리 기반 캐싱 이용 (테스트)
+    //나중에 바꿔야함!!
     private final Map<String, CardProblemSet> cache = new ConcurrentHashMap<>();
 
     //5개의 카드 고르기 문제 생성
@@ -64,14 +65,14 @@ public class CardSelectService {
     }
 
     //id와 index를 바탕으로 적절한 문제 반환
-    public List<Card> getProblem(String problemSetId, int problemIndex) {
+    public CardProblem getProblem(String problemSetId, int problemIndex) {
         CardProblemSet problemSet = cache.get(problemSetId);
         if( problemSet == null) throw new RuntimeException("해당 id의 문제를 찾을 수 없습니다");
 
         List<CardProblem> problems = problemSet.getProblems();
         if(problemIndex<0 || problemIndex >= problems.size()) throw new IllegalArgumentException("유효하지 않은 인덱스입니다.");
 
-        return problemSet.getProblems().get(problemIndex).getCards();
+        return problemSet.getProblems().get(problemIndex);
     }
 
     //정답 확인

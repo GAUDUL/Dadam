@@ -18,6 +18,7 @@ export type ListeningStackParamList = {
   CardSelect: undefined;
   Dictation: undefined;
   CardSelectProb: { problemSetId: string };
+  CardSelectScore: {score: number};
   DictationProb: undefined;
 }
 

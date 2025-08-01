@@ -5,6 +5,7 @@ import { RouteProp, useRoute } from '@react-navigation/native';
 import { ListeningStackParamList } from '../../../navigation/types';
 import { useEffect, useState } from 'react';
 import { Card } from '../types';
+import { useTts } from '../hooks/useTts';
 
 type CardSelectProbRouteProp = RouteProp<ListeningStackParamList, 'CardSelectProb'>;
 
@@ -12,17 +13,24 @@ export default function CardSelectProbScreen() {
     const navigation = useListeningNavigation();
     const route = useRoute<CardSelectProbRouteProp>();
     const {submit, getCardProb, loading, error} = useCardProb(); 
+    const {getVoice, deleteTtsFile} = useTts();
     const {problemSetId} = route.params;
 
     const [problemIndex, setProblemIndex] = useState(0);
+    const [answerIndex, setAnswerIndex] = useState(-1);
     const [selectedCardIndex , setSelectedCardIndex] = useState<number | null> (null);
-    const [correctCnt, setCorrectCnt] = useState(0);
+    const [score, setscore] = useState(0);
     const [cards, setCards] = useState<Card[]>([]);
+    const [isSubmitted, setIsSubmitted] = useState(false);
+
 
     useEffect(()=>{
         const loadProblem = async () => {
+            setIsSubmitted(false);
+            setSelectedCardIndex(null);
             const prob = await getCardProb({problemSetId, problemIndex});
-            setCards(prob);
+            setCards(prob.cards);
+            setAnswerIndex(prob.answerIndex);
         }
         loadProblem();
     },[problemIndex]);
@@ -35,12 +43,31 @@ export default function CardSelectProbScreen() {
         const answer = { problemSetId, problemIndex, selectedCardIndex };
         
         const res = await submit(answer);
-        if(res) setCorrectCnt((prev)=>prev+1);
+        if(res) setscore((prev)=>prev+1);
+        setIsSubmitted(true);
     }
 
     const handleNext = async () => {
-        setProblemIndex((prev)=>prev + 1);
+        if(answerIndex !== -1){
+            const text = cards[answerIndex].body;
+            await deleteTtsFile(text);
+        }
+        if(problemIndex >= 4) {
+            navigation.reset({
+                index: 0,
+                routes: [{ name: 'CardSelectScore', params: { score } }],
+            });
+        }
+        else setProblemIndex((prev)=>prev + 1);
     }
+
+    const handleVoice = async () => {
+        if(answerIndex !== -1) {
+            const text = cards[answerIndex].body;
+            getVoice(text);
+        }
+    }
+    
     
   return (
     <View>
@@ -49,16 +76,55 @@ export default function CardSelectProbScreen() {
             <TouchableOpacity
              key={index}
              onPress={() => setSelectedCardIndex(index)}
+             disabled={isSubmitted}
+             style={[
+                 styles.cardButton,
+                 isSubmitted && styles.cardButtonDisabled,
+                 selectedCardIndex === index && styles.cardButtonSelected,
+             ]}
             >
                 <Text>{card.body}</Text>
             </TouchableOpacity>
         ))}
-        <TouchableOpacity onPress={handleSubmit}>
-          <Text>정답 제출</Text>
+        <TouchableOpacity onPress={handleVoice}>
+            <Text>음성 듣기</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={handleNext}>
-            <Text>다음</Text>
-        </TouchableOpacity>
+        {!isSubmitted && (
+            <TouchableOpacity onPress={handleSubmit}>
+            <Text>정답 제출</Text>
+            </TouchableOpacity>
+        )}
+        {isSubmitted && (
+            <TouchableOpacity onPress={handleNext}>
+                <Text>다음</Text>
+            </TouchableOpacity>
+        )}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  cardButton: {
+    padding: 10,
+    borderRadius: 5,
+    marginVertical: 5,
+    backgroundColor: 'transparent',
+    opacity: 1,
+    borderWidth: 1,
+    borderColor: 'transparent',
+  },
+  cardButtonDisabled: {
+    opacity: 0.5,
+  },
+  cardButtonSelected: {
+    borderWidth: 3,
+    borderColor: 'black',
+    backgroundColor: 'transparent',
+  },
+  cardText: {
+    color: 'black',
+  },
+  cardTextSelected: {
+    color: 'black',
+  },
+});
