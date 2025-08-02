@@ -72,27 +72,35 @@ export default function CardSelectProbScreen() {
   return (
     <View>
         <Text>음성을 듣고 적절한 카드를 골라보세요</Text>
-        {cards.map((card, index) => (
+        {cards.map((card, index) => {
+            const isCorrect = isSubmitted && index === answerIndex;
+            const isWrong = isSubmitted && index === selectedCardIndex && selectedCardIndex !== answerIndex;
+         return (
             <TouchableOpacity
-             key={index}
-             onPress={() => setSelectedCardIndex(index)}
-             disabled={isSubmitted}
-             style={[
-                 styles.cardButton,
-                 isSubmitted && styles.cardButtonDisabled,
-                 selectedCardIndex === index && styles.cardButtonSelected,
-             ]}
+                key={index}
+                onPress={() => setSelectedCardIndex(index)}
+                disabled={isSubmitted}
+                style={[
+                    styles.cardButton,
+                    selectedCardIndex === index && !isSubmitted && styles.cardButtonSelected,
+                    isCorrect && styles.cardCorrect,
+                    isWrong && styles.cardIncorrect,
+                    isSubmitted && styles.cardButtonDisabled,
+                ]}
             >
-                <Text>{card.body}</Text>
+            <Text>{card.body}</Text>
             </TouchableOpacity>
-        ))}
-        <TouchableOpacity onPress={handleVoice}>
-            <Text>음성 듣기</Text>
-        </TouchableOpacity>
+            );
+        })}
         {!isSubmitted && (
-            <TouchableOpacity onPress={handleSubmit}>
-            <Text>정답 제출</Text>
+        <>
+            <TouchableOpacity onPress={handleVoice}>
+                <Text>음성 듣기</Text>
             </TouchableOpacity>
+            <TouchableOpacity onPress={handleSubmit}>
+                <Text>정답 제출</Text>
+            </TouchableOpacity>
+        </>
         )}
         {isSubmitted && (
             <TouchableOpacity onPress={handleNext}>
@@ -104,27 +112,26 @@ export default function CardSelectProbScreen() {
 }
 
 const styles = StyleSheet.create({
-  cardButton: {
-    padding: 10,
-    borderRadius: 5,
-    marginVertical: 5,
-    backgroundColor: 'transparent',
-    opacity: 1,
-    borderWidth: 1,
-    borderColor: 'transparent',
-  },
-  cardButtonDisabled: {
-    opacity: 0.5,
-  },
-  cardButtonSelected: {
-    borderWidth: 3,
-    borderColor: 'black',
-    backgroundColor: 'transparent',
-  },
-  cardText: {
-    color: 'black',
-  },
-  cardTextSelected: {
-    color: 'black',
-  },
+    cardButton: {
+        padding: 12,
+        borderWidth: 1,
+        borderColor: '#ccc',
+        marginVertical: 8,
+        borderRadius: 8,
+    },
+    cardButtonSelected: {
+        borderColor: '#000',
+        backgroundColor: '#ddd',
+    },
+    cardButtonDisabled: {
+        opacity: 0.6,
+    },
+    cardCorrect: {
+        backgroundColor: 'lightgreen',
+        borderColor: 'green',
+    },
+    cardIncorrect: {
+        backgroundColor: '#f8d7da',
+        borderColor: '#dc3545',
+    },
 });
