@@ -4,8 +4,8 @@ import com.example.backend.domain.listening.cardSelect.dto.Card;
 import com.example.backend.domain.listening.cardSelect.dto.CardProblem;
 import com.example.backend.domain.listening.cardSelect.dto.CardProblemSet;
 import com.example.backend.domain.listening.cardSelect.dto.CardSelectRequest;
-import com.example.backend.domain.listening.word.Word;
-import com.example.backend.domain.listening.word.WordRepository;
+import com.example.backend.domain.word.Word;
+import com.example.backend.domain.word.WordRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

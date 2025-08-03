@@ -1,4 +1,4 @@
-package com.example.backend.domain.listening.word;
+package com.example.backend.domain.word;
 
 import jakarta.persistence.*;
 import lombok.Getter;

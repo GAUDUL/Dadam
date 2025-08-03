@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { getWordTts } from "../api/listeningApi";
-import Sound from 'react-native-sound';
-import RNFS from 'react-native-fs';
+import Sound from "react-native-sound";
+import RNFS from "react-native-fs";
 
 export function useTts(){
     const [error, setError] = useState<string | null>(null);
