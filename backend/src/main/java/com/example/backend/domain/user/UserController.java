@@ -35,7 +35,7 @@ public class UserController {
 
     @GetMapping("/user-info")
     public ResponseEntity<UserInfo> getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails){
-        if (userDetails==null){
+        if (userDetails == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
         User user = userDetails.getUser();
