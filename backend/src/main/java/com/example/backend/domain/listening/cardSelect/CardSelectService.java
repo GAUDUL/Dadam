@@ -6,20 +6,25 @@ import com.example.backend.domain.listening.cardSelect.dto.CardProblemSet;
 import com.example.backend.domain.listening.cardSelect.dto.CardSelectRequest;
 import com.example.backend.domain.word.Word;
 import com.example.backend.domain.word.WordRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.springframework.data.redis.core.StringRedisTemplate;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
 public class CardSelectService {
 
     private final WordRepository wordRepository;
-    //일단은 메모리 기반 캐싱 이용 (테스트)
-    //나중에 바꿔야함!!
-    private final Map<String, CardProblemSet> cache = new ConcurrentHashMap<>();
+    private final StringRedisTemplate redisTemplate;
+    private final ObjectMapper objectMapper;
+
+    private static final long TTL_SECONDS = 1800;
 
     //5개의 카드 고르기 문제 생성
     public List<CardProblem> createProblems() {
@@ -53,43 +58,59 @@ public class CardSelectService {
     }
 
     //5개의 카드 고르기 문제를 하나로 묶어서 반환
-    public String createProblemSet() {
+    public String createProblemSet(){
+        try{
+            List<CardProblem> problems = createProblems();
 
-        List<CardProblem> problems = createProblems();
+            String problemSetId = UUID.randomUUID().toString();
+            CardProblemSet problemSet = new CardProblemSet(problemSetId, problems);
 
-        String problemSetId = UUID.randomUUID().toString();
-        CardProblemSet problemSet = new CardProblemSet(problemSetId, problems);
-
-        cache.put(problemSetId, problemSet);
-        return problemSetId;
+            String json = objectMapper.writeValueAsString(problemSet);
+            redisTemplate.opsForValue().set(problemSetId, json, TTL_SECONDS, TimeUnit.SECONDS);
+            return problemSetId;
+        } catch(JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     //id와 index를 바탕으로 적절한 문제 반환
-    public CardProblem getProblem(String problemSetId, int problemIndex) {
-        CardProblemSet problemSet = cache.get(problemSetId);
-        if( problemSet == null) throw new RuntimeException("해당 id의 문제를 찾을 수 없습니다");
+    public CardProblem getProblem(String problemSetId, int problemIndex){
+        try{
+            String json = redisTemplate.opsForValue().get(problemSetId);
+            if( json == null) throw new RuntimeException("해당 id의 문제를 찾을 수 없습니다");
 
-        List<CardProblem> problems = problemSet.getProblems();
-        if(problemIndex<0 || problemIndex >= problems.size()) throw new IllegalArgumentException("유효하지 않은 인덱스입니다.");
+            CardProblemSet problemSet = objectMapper.readValue(json, CardProblemSet.class);
 
-        return problemSet.getProblems().get(problemIndex);
+            List<CardProblem> problems = problemSet.getProblems();
+            if(problemIndex<0 || problemIndex >= problems.size()) throw new IllegalArgumentException("유효하지 않은 인덱스입니다.");
+
+            return problemSet.getProblems().get(problemIndex);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     //정답 확인
     public boolean checkAnswer(CardSelectRequest cardSelect){
-        CardProblemSet problemSet = cache.get(cardSelect.getProblemSetId());
-        if(problemSet == null) throw new RuntimeException("해당 id의 문제를 찾을 수 없습니다");
+        try{
+            String json = redisTemplate.opsForValue().get(cardSelect.getProblemSetId());
+            if(json == null) throw new RuntimeException("해당 id의 문제를 찾을 수 없습니다");
 
-        List<CardProblem> problems = problemSet.getProblems();
-        int index = cardSelect.getProblemIndex();
+            CardProblemSet problemSet = objectMapper.readValue(json, CardProblemSet.class);
 
-        if (index < 0 || index >= problems.size()) throw new IllegalArgumentException("유효하지 않은 문제 인덱스입니다");
-        //현재 문제 가져오기
-        CardProblem problem = problems.get(index);
+            List<CardProblem> problems = problemSet.getProblems();
+            int index = cardSelect.getProblemIndex();
 
-        int answerIndex = problem.getAnswerIndex();
-        int userSelected = cardSelect.getSelectedCardIndex();
+            if (index < 0 || index >= problems.size()) throw new IllegalArgumentException("유효하지 않은 문제 인덱스입니다");
+            //현재 문제 가져오기
+            CardProblem problem = problems.get(index);
 
-        return answerIndex == userSelected;
+            int answerIndex = problem.getAnswerIndex();
+            int userSelected = cardSelect.getSelectedCardIndex();
+
+            return answerIndex == userSelected;
+        } catch(JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
