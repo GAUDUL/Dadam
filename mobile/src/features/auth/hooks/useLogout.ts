@@ -7,8 +7,8 @@ export function useLogout() {
   const dispatch = useDispatch();
 
   const logout = async () => {
-    await AsyncStorage.removeItem('accessToken'); // ✔️ 토큰 삭제
-    dispatch(logoutSuccess()); // ✔️ Redux 상태 초기화
+    await AsyncStorage.removeItem('accessToken');
+    dispatch(logoutSuccess());
   };
 
   return { logout };
