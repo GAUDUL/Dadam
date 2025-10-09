@@ -1,6 +1,7 @@
 package com.example.backend.domain.user;
 
 import com.example.backend.domain.user.dto.RewardRequest;
+import com.example.backend.domain.user.dto.ShopDataResponse;
 import com.example.backend.domain.user.dto.UserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,8 @@ public class UserController {
         if (userDetails == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        User user = userDetails.getUser();
+        String userId = userDetails.getUser().getUserId();
+        User user = userService.getCurrentUserInfo(userId);
 
         UserInfo userInfo = new UserInfo(
                 user.getUsername(),
@@ -32,6 +34,17 @@ public class UserController {
         );
 
         return ResponseEntity.ok(userInfo);
+    }
+
+    @GetMapping("/shop-data")
+    public ResponseEntity<ShopDataResponse> getShopData(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        String userId = userDetails.getUser().getUserId();
+        ShopDataResponse data = userService.userShopData(userId);
+
+        return ResponseEntity.ok(data);
     }
 
     @PostMapping("/reward")

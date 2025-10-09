@@ -4,7 +4,7 @@ import com.example.backend.domain.auth.dto.LoginRequest;
 import com.example.backend.domain.auth.dto.TokenResponse;
 import com.example.backend.domain.auth.dto.SignupRequest;
 import com.example.backend.domain.user.User;
-import com.example.backend.domain.user.UserRepository;
+import com.example.backend.domain.user.repository.UserRepository;
 import com.example.backend.global.security.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
