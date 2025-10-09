@@ -9,20 +9,14 @@ export default function Home() {
   const {logout} = useLogout();
   const navigation = useHomeNavigation();
   const [user, setUser] = useState(
-    { userName: null,
-      coin: 0,
-    }
-  );
+);
 
   useEffect(()=>{
     getUserInfo()
     .then(data=>{
-      setUser({
-        userName: data.userName,
-        coin: data.coin,
-      });
+      setUser(data.userName);
     })
-    
+
   },[])
   
   const handleShop = async () => {
@@ -37,8 +31,7 @@ export default function Home() {
   return (
     <View>
         <Text>Home</Text>
-        <Text>{user.userName}</Text>
-        <Text>{user.coin}</Text>
+        <Text>{user}</Text>
         <TouchableOpacity onPress={handleShop}>
           <Text>상점</Text>
         </TouchableOpacity>

@@ -1,5 +1,6 @@
 package com.example.backend.domain.user;
 
+import com.example.backend.domain.user.dto.PurchaseRequest;
 import com.example.backend.domain.user.dto.ShopDataResponse;
 import com.example.backend.domain.user.repository.UserProductRepository;
 import com.example.backend.domain.user.repository.UserRepository;
@@ -36,6 +37,20 @@ public class UserService {
                 .stream().mapToInt(UserProduct::getProductId).toArray();
 
         return new ShopDataResponse(coin,owned);
+    }
+
+    @Transactional
+    public void updatePurchase(String id, PurchaseRequest req) {
+        User user = userRepository.findById(id).get();
+        int currentCoin = user.getCoin();
+        int change = currentCoin - req.getPrice();
+
+        UserProduct product = new UserProduct();
+        product.setProductId(req.getProductId());
+        product.setUserId(id);
+        productRepository.save(product);
+
+        user.setCoin(change);
     }
 
 }

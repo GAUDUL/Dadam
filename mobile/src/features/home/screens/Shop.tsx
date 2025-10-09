@@ -1,7 +1,8 @@
 import { View, Text, TouchableOpacity, Alert, StyleSheet, FlatList } from 'react-native';
 import { useEffect, useState } from 'react';
 import { useHomeNavigation } from '../../../navigation/useAppNavigation';
-import { getUserInfo } from '../api/userApi';
+import { useShop } from '../hooks/useShop';
+import ProductItem from '../components/ProductItem';
 
 const PRODUCTS = [
   { id: 1, name: '상품 1', price: 100 },
@@ -13,35 +14,26 @@ const PRODUCTS = [
 ];
 
 export default function Shop() {
-
-  const navigation = useHomeNavigation();
-  const [coin,setCoin] = useState();
-
-    const fetchUserInfo = async () => {
-    try {
-      const data = await getUserInfo();
-      setCoin(data.coin);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  useEffect(()=>{
-    fetchUserInfo();
-  },[]);
-  
-  const handleBack = async () => {
-    navigation.navigate('Home');
-  }
+  const { coin, owned, processing, handlePurchase } = useShop();
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Shop</Text>
       <Text style={styles.coin}>보유 코인: {coin}</Text>
 
-      <TouchableOpacity onPress={handleBack} style={styles.back}>
-        <Text>돌아가기</Text>
-      </TouchableOpacity>
+        <FlatList
+        data={PRODUCTS}
+        keyExtractor={(i) => i.id.toString()}
+        renderItem={({ item }) => (
+          <ProductItem
+            item={item}
+            owned={owned}
+            coin={coin}
+            processing={processing}
+            onPurchase={handlePurchase}
+          />
+        )}
+      />
     </View>
   );
 }

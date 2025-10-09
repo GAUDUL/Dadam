@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { getUserInfo, getUserShopInfo } from "../api/userApi";
+import { getUserShopInfo, requestPurchase } from "../api/userApi";
 import { Alert } from "react-native";
 
 export function useShop(){
@@ -25,5 +25,39 @@ export function useShop(){
         fetchShop();
     },[fetchShop]);
 
+    const handlePurchase = useCallback(
+        async(product: {id:number; name: string; price: number})=>{
+            console.log('coin:', coin, typeof coin);
+            if(owned.includes(product.id)) return;
+            if(coin < product.price) {
+                Alert.alert('코인이 부족합니다.');
+                return;
+            }
+            Alert.alert(
+                `${product.name} 구매`,
+                `${product.price} 코인을 사용해 구매하시겠습니까?`,
+                [
+                    {text:'취소', style: 'cancel'},
+                    {
+                     text: `구매`,
+                     onPress: async() => {
+                        try{
+                            setProcessing(product.id);
+                            await requestPurchase(product.price, product.id);
+                            await fetchShop();
+                            Alert.alert('구매 완료');
+                        } catch(e){
+                            Alert.alert('구매 실패');
+                        }finally{
+                            setProcessing(null);
+                        }
+                     }
+                    }
+                ]
+            )
+        },
+        [coin, owned, fetchShop]
+    )
 
+    return { coin, owned, loading, processing, fetchShop, handlePurchase };
 }
