@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useHomeNavigation } from '../../../navigation/useAppNavigation';
 import { useShop } from '../hooks/useShop';
 import ProductItem from '../components/ProductItem';
+import CoinBadge from '../components/CoinBadge';
 
 const PRODUCTS = [
   { id: 1, name: '상품 1', price: 100 },
@@ -17,31 +18,40 @@ export default function Shop() {
   const { coin, owned, processing, handlePurchase } = useShop();
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Shop</Text>
-      <Text style={styles.coin}>보유 코인: {coin}</Text>
+     <View style={styles.container}>
+      <View style={styles.row}>
+        <View style={styles.left}></View>
 
-        <FlatList
-        data={PRODUCTS}
-        keyExtractor={(i) => i.id.toString()}
-        renderItem={({ item }) => (
-          <ProductItem
-            item={item}
-            owned={owned}
-            coin={coin}
-            processing={processing}
-            onPurchase={handlePurchase}
+        <View style={styles.right}>
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+            <CoinBadge coin={coin} absolute={false} />
+          </View>
+          <FlatList
+            data={PRODUCTS}
+            keyExtractor={(i) => i.id.toString()}
+            renderItem={({ item }) => (
+              <ProductItem
+                item={item}
+                owned={owned}
+                coin={coin}
+                processing={processing}
+                onPurchase={handlePurchase}
+              />
+            )}
+            contentContainerStyle={{ paddingTop: 8 }}
+            style={{ backgroundColor: 'white', borderRadius: 12, padding: 8 }}
           />
-        )}
-      />
+        </View>
+      </View>
     </View>
   );
+
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 16, flex: 1 },
+  container: { flex: 1, padding: 16, backgroundColor:'#eee4dbff' },
   title: { fontSize: 20, fontWeight: '600', marginBottom: 8 },
-  coin: { marginBottom: 12 },
-  back: { marginTop: 12, alignItems: 'center' },
-  center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  row: { flex: 1, flexDirection: 'row' },
+  left: { flex: 1 },
+  right: { flex: 1, paddingLeft: 8 }, 
 });
