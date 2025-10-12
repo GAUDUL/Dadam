@@ -10,7 +10,6 @@ import DictationCanvas from "../../components/DictationCanvas";
 import DictationButtons from "../../components/DictationButtons";
 import DictationResult from "../../components/DictationResult";
 
-
 type DictationProbRouteProp = RouteProp<ListeningStackParamList, "DictationProb">;
 
 export default function DictationProbScreen() {
@@ -75,40 +74,66 @@ export default function DictationProbScreen() {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.container}>
       <Text style={styles.title}>잘 듣고, 그대로 받아 적어보세요</Text>
 
-      <DictationCanvas signRef={signRef} onOK={onOK} />
+      <View style={styles.canvasBox}>
+        <DictationCanvas signRef={signRef} onOK={onOK} />
+      </View>
 
-      {!isSubmitted ? (
+      {/* 결과 화면만 스크롤 가능하게 분리 */}
+      {isSubmitted ? (
+        <ScrollView
+          style={styles.resultScroll}
+          contentContainerStyle={styles.resultContainer}
+          showsVerticalScrollIndicator={false}
+        >
+          <DictationResult
+            userAnswer={userAnswer}
+            correctAnswer={dictationProb?.body ?? ""}
+            translated={dictationProb?.translatedBody}
+            onNext={handleNext}
+          />
+        </ScrollView>
+      ) : (
         <DictationButtons
           onVoice={() => dictationProb && getVoice(dictationProb)}
           onClear={() => signRef.current?.clearSignature()}
           onSubmit={handleSubmit}
         />
-      ) : (
-        <DictationResult
-          userAnswer={userAnswer}
-          correctAnswer={dictationProb?.body ?? ""}
-          translated={dictationProb?.translatedBody}
-          onNext={handleNext}
-        />
       )}
-    </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     padding: 16,
     backgroundColor: "#d9e8ce",
     alignItems: "center",
-    paddingBottom: 50,
   },
   title: {
     fontSize: 20,
     fontWeight: "600",
     marginBottom: 12,
     textAlign: "center",
+  },
+  canvasBox: {
+    width: "90%",
+    height: 300,
+    borderRadius: 12,
+    overflow: "hidden",
+    backgroundColor: "#fff",
+    elevation: 3,
+    marginBottom: 16,
+  },
+  resultScroll: {
+    flex: 1,
+    width: "100%",
+  },
+  resultContainer: {
+    alignItems: "center",
+    paddingBottom: 80,
   },
 });

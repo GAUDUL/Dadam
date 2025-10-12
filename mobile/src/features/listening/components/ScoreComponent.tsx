@@ -12,7 +12,7 @@ interface ScoreProps {
 export default function ScoreComponent({
   title = '결과',
   score,
-  maxScore,
+  maxScore=5,
   coinsPerPoint = 10,
   onPressHome,
 }: ScoreProps) {
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
   coins: {
     fontSize: 22,
     fontWeight: '700',
-    color: '#ffb300',
+    color: '#18492eff',
   },
   button: {
     paddingVertical: 14,
