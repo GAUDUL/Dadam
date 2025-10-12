@@ -32,13 +32,14 @@ export default function SecondScreen() {
       <TouchableOpacity
         style={{
           position: 'absolute',
-          left: '-1%',
-          bottom: '10%',
+          left: '-5%',
+          bottom: '9%',
           alignItems: 'center',
           }}
         onPress={() => navigation.navigate('HomeStack')}
       >
-       <Image source={require('../../../assets/button/home_button.png')} />
+       <Image source={require('../../../assets/button/home_button.png')}
+        style={{ width: 400, height: 400, resizeMode: 'contain' }} />
        <View 
         style={{
           backgroundColor: 'white',

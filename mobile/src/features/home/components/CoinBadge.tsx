@@ -8,24 +8,38 @@ interface CoinBadgeProps {
 export default function CoinBadge({ coin, absolute = true }: CoinBadgeProps) {
   return (
     <View style={[styles.container, absolute ? styles.absolute : null]}>
-      <Text style={styles.text}>{coin} 💰</Text>
+      <Text style={styles.coin}>💰 {coin}</Text>
+      <Text style={styles.label}>보유 코인</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    width: 100,           // 고정 너비
-    height: 40,           // 고정 높이
-    backgroundColor: 'white',
-    borderColor: '#856060ff',
-    borderWidth: 1.5,
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
+    width: 160,
+    height: 70,
+    backgroundColor: '#f5edb1ff',
+    borderColor: '#ffd700',
+    borderWidth: 2,
+    borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 8,      // absolute 아닐 때 간격
+    marginBottom: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 2, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  coin: {
+    fontSize: 26,
+    fontWeight: '700',
+    color: '#b37400',
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#5a3e24',
   },
   absolute: {
     position: 'absolute',
@@ -33,5 +47,4 @@ const styles = StyleSheet.create({
     right: 20,
     zIndex: 10,
   },
-  text: { fontSize: 14, fontWeight: '700' },
 });

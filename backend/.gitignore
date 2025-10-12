@@ -36,5 +36,6 @@ out/
 ### VS Code ###
 .vscode/
 
+src/main/resources/static/images/**
 src/main/resources/application.properties
 src/main/resources/google-service-account.json

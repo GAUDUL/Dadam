@@ -1,7 +1,22 @@
-type ProductItemProps = {
-  item: { id: number; name: string; price: number };
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  image: any;
+  top?: number;
+  left?: number;
+  width?: number;
+  height?: number;
+}
+
+interface ProductItemProps {
+  item: Product;
   owned: number[];
   coin: number;
   processing: number | null;
-  onPurchase: (product: { id: number; name: string; price: number }) => void;
-};
+  equippedId: number | null;
+  tryEquipped: boolean;
+  onPurchase: (item: Product) => void;
+  onEquip: (item: Product) => void;
+  onTry: (item: Product) => void;
+}

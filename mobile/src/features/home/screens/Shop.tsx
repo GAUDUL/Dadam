@@ -1,57 +1,108 @@
-import { View, Text, TouchableOpacity, Alert, StyleSheet, FlatList } from 'react-native';
+import { View, FlatList, StyleSheet, Image } from 'react-native';
 import { useEffect, useState } from 'react';
-import { useHomeNavigation } from '../../../navigation/useAppNavigation';
 import { useShop } from '../hooks/useShop';
 import ProductItem from '../components/ProductItem';
 import CoinBadge from '../components/CoinBadge';
-
-const PRODUCTS = [
-  { id: 1, name: '상품 1', price: 100 },
-  { id: 2, name: '상품 2', price: 200 },
-  { id: 3, name: '상품 3', price: 300 },
-  { id: 4, name: '상품 4', price: 400 },
-  { id: 5, name: '상품 5', price: 500 },
-  { id: 6, name: '상품 6', price: 600 },
-];
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { PRODUCTS } from '../items';
 
 export default function Shop() {
   const { coin, owned, processing, handlePurchase } = useShop();
+  const [equippedId, setEquippedId] = useState<number | null>(null);
+  const [tryEquippedId, setTryEquippedId] = useState<number | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      const savedId = await AsyncStorage.getItem('@equippedId');
+      if (savedId) setEquippedId(Number(savedId));
+    })();
+  }, []);
+
+  const handleEquip = async (item: { id: number }) => {
+    const newId = equippedId === item.id ? null : item.id;
+    setEquippedId(newId);
+    await AsyncStorage.setItem('@equippedId', newId?.toString() ?? '');
+  };
 
   return (
-     <View style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.row}>
-        <View style={styles.left}></View>
+        <View style={styles.left}>
+          <View style={styles.characterContainer}>
+            <Image
+              source={require('../../../assets/character.png')}
+              style={styles.character}
+              resizeMode="contain"
+            />
 
+            {(() => {
+              const itemId = equippedId ?? tryEquippedId;
+              if (!itemId) return null;
+              const item = PRODUCTS.find(p => p.id === itemId);
+              if (!item) return null;
+
+              return (
+                <Image
+                  source={item.image}
+                  style={{
+                    position: 'absolute',
+                    top: item.top ?? 0,
+                    left: item.left ?? 0,
+                    width: item.width ?? 100,
+                    height: item.height ?? 100,
+                  }}
+                  resizeMode="contain"
+                />
+              );
+            })()}
+          </View>
+        </View>
+
+        {/* 상품 리스트 */}
         <View style={styles.right}>
-          <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-end', marginBottom: 8 }}>
             <CoinBadge coin={coin} absolute={false} />
           </View>
           <FlatList
             data={PRODUCTS}
-            keyExtractor={(i) => i.id.toString()}
+            keyExtractor={(item) => item.id.toString()}
+            extraData={[equippedId, tryEquippedId, ...owned, processing]}
             renderItem={({ item }) => (
               <ProductItem
                 item={item}
                 owned={owned}
                 coin={coin}
                 processing={processing}
+                equippedId={equippedId}
+                tryEquipped={tryEquippedId === item.id}
                 onPurchase={handlePurchase}
+                onEquip={handleEquip}
+                onTry={(product) =>
+                  setTryEquippedId((prev) => (prev === product.id ? null : product.id))
+                }
               />
             )}
-            contentContainerStyle={{ paddingTop: 8 }}
-            style={{ backgroundColor: 'white', borderRadius: 12, padding: 8 }}
           />
         </View>
       </View>
     </View>
   );
-
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, backgroundColor:'#eee4dbff' },
-  title: { fontSize: 20, fontWeight: '600', marginBottom: 8 },
+  container: { flex: 1, padding: 16, backgroundColor: '#eee4dbff' },
   row: { flex: 1, flexDirection: 'row' },
-  left: { flex: 1 },
-  right: { flex: 1, paddingLeft: 8 }, 
+  left: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  right: { flex: 1, paddingLeft: 8 },
+
+  characterContainer: {
+    width: 300,
+    height: 300,
+    position: 'relative', // absolute 자식 기준
+  },
+
+  character: {
+    width: '100%',
+    height: '100%',
+  },
 });

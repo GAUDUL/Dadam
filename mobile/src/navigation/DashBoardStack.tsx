@@ -10,7 +10,7 @@ const Stack = createNativeStackNavigator();
 export default function DashBoardStack() {
   return (
     <Stack.Navigator initialRouteName="DashBoard">
-      <Stack.Screen name="DashBoard" component={DashBoard} />
+      <Stack.Screen name="DashBoard" component={DashBoard} options={{ headerShown: false }}/>
       <Stack.Screen name="ListeningStack" component={ListeningStack}  options={{ headerShown: false }} />
       <Stack.Screen name="SpeakingStack" component={SpeakingStack}  options={{ headerShown: false }} />
       <Stack.Screen name="WritingStack" component={WritingStack}  options={{ headerShown: false }} />

@@ -46,7 +46,7 @@ public class AuthController {
     public ResponseEntity<TokenResponse> refreshToken(@RequestBody TokenRequest request){
         String refreshToken = request.getRefreshToken();
 
-        if(!jwtTokenProvider.validateToken(refreshToken)){
+        if (!jwtTokenProvider.validateRefreshToken(refreshToken)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
@@ -60,6 +60,8 @@ public class AuthController {
 
         String newAccessToken = jwtTokenProvider.generateAccessToken(userId, Role.valueOf(role));
         String newRefreshToken = jwtTokenProvider.generateRefreshToken(userId, Role.valueOf(role));
+
+        refreshTokenService.storeRefreshToken(userId, newRefreshToken);
 
         return ResponseEntity.ok(new TokenResponse(newAccessToken, newRefreshToken));
     }
