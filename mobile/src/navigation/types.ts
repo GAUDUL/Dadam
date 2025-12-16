@@ -33,4 +33,5 @@ export type WritingStackParamList = {
 
 export type HomeStackParamList = {
   Home: undefined;
+  Shop: undefined;
 }

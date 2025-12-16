@@ -39,7 +39,8 @@ api.interceptors.response.use(
         }
 
         //재발급
-        const response = await api.post('/auth/refresh', { refreshToken });
+        const refreshApi = axios.create({ baseURL: REACT_APP_SPRING_API });
+        const response = await refreshApi.post('/auth/refresh', { refreshToken });
 
         const { accessToken: newAccessToken, refreshToken: newRefreshToken } = response.data;
 

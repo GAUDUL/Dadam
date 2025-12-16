@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserInfo {
-    private String username;
+    private String userName;
     private String email;
     private String nativeLanguage;
     private Integer level;
@@ -14,7 +14,7 @@ public class UserInfo {
     private String role;
 
     public UserInfo(String username, String email, String nativeLanguage, Integer level, Integer coin, String role) {
-        this.username = username;
+        this.userName = username;
         this.email = email;
         this.nativeLanguage = nativeLanguage;
         this.level = level;
