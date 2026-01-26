@@ -2,7 +2,7 @@ package com.example.backend.global.security;
 
 import com.example.backend.domain.user.User;
 import com.example.backend.domain.user.UserDetailsImpl;
-import com.example.backend.domain.user.UserRepository;
+import com.example.backend.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
